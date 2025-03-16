@@ -1,0 +1,70 @@
+--LAB 3--
+
+--SELECT sid AS ID_student, nume, an FROM Student;
+--SELECT DISTINCT an FROM Student;
+--SELECT an FROM Student;
+--SELECT * FROM Student;
+
+--SELECT * FROM Student WHERE sid='SET001';
+--SELECT * FROM Student WHERE an=1;
+
+--SELECT * FROM Student ORDER BY an;
+--SELECT sid, nume, an, media FROM Student ORDER BY an, media;
+--SELECT * FROM Student WHERE bursa>0 ORDER BY an, media;
+
+--SELECT nume, upper(nume) AS numS, length(nume) AS lngNume FROM Student;
+--SELECT sid, nume, an FROM Student WHERE nume LIKE '%N';
+--SELECT extract(MONTH from SYSDATE) FROM Dual;
+--SELECT nume, media,
+--    CASE WHEN media<5 THEN 'NS'
+--        WHEN media<7 THEN 'S'
+--        WHEN media<10 THEN 'B'
+--        ELSE 'FB'
+--    END AS calificativ
+--FROM Student; 
+
+--L3.Ex1.
+--SELECT * FROM Student WHERE nume LIKE '%u';
+ 
+--L3.Ex2.
+--SELECT 
+--    substr(nume, instr(nume, ' ')+1) as nume,
+--    substr(nume, 1, instr(nume, ' ')-1) as prenume,
+--    an
+--FROM Student;
+
+--L3.Ex3.
+--SELECT
+--    nume,
+--    substr(nume, 1, instr(nume, ' ')-1) AS prenume,
+--    length(substr(nume, 1, instr(nume, ' ')-1)) AS lungime_prenume
+--FROM Student
+--    WHERE length(substr(nume, 1, instr(nume, ' ')-1)) >= 7;
+
+--L3.Ex4.
+--SELECT
+--    nume, an, datan
+--FROM Student
+--    WHERE extract(year from SYSDATE) - extract(year from datan) >=20;
+
+--L3.Ex5.
+--SELECT * FROM Student WHERE extract(month from SYSDATE) = extract(month from datan);
+
+--L3.Ex6.
+--SELECT * FROM Student WHERE TRIM(bursa) is NULL OR TRIM(bursa) = '-';
+--SELECT * FROM Student WHERE bursa = 0;
+
+--L3.Ex7.
+--SELECT nume, an, NVL(cnp,'CNP necompletat') as CNP FROM Student WHERE an =2;
+
+--L3.Ex8.
+--SELECT nume, cnp, an FROM Student where substr(cnp, 1, 1) in 2;
+--SELECT nume, cnp, an FROM Student where substr(cnp, 1, 1) in 1;
+
+--L3.Ex9.
+--SELECT nume, an, 
+--    CASE WHEN substr(cnp,1,1) in 2 THEN 'FETE'
+--         WHEN substr(cnp,1,1) in 1 THEN 'BAIETI'
+--         ELSE 'NON-BINARY'
+--    END AS gen
+--FROM Student;
