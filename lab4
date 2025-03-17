@@ -1,0 +1,26 @@
+--SELECT s.sid, s.nume, s.an, f.nume as facultate FROM Student s, Facultate f WHERE s.fid=f.fid AND an<3;
+
+--L4.Ex1.
+--SELECT p.nume, f.fid, f.nume, f.adr, f.tel FROM Profesor p, Facultate f WHERE p.fid=f.fid;
+
+--L4.Ex2.
+--SELECT k.titlu, s.nrlocuri FROM Curs k, Sala s WHERE k.sala=s.cods AND k.ora > 12;
+
+--L4.Ex3.
+--SELECT * FROM Curs JOIN Sala ON Curs.sala=Sala.cods AND Sala.etaj = 1;
+
+--L4.Ex4.
+--SELECT k.titlu, p.nume, to_char(SYSDATE, 'Day', 'NLS_DATE_LANGUAGE = Romanian') as zi_curenta FROM Curs k, Profesor p
+-- WHERE k.pid=p.pid 
+-- AND trim(k.zi) = trim(to_char(SYSDATE, 'Day', 'NLS_DATE_LANGUAGE = Romanian'));
+
+--L4.Ex5.
+
+--L4.Ex6.
+
+--L4.Ex7.
+
+--L4.Ex8.
+
+--L4.Ex9.
+
