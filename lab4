@@ -1,26 +1,45 @@
---SELECT s.sid, s.nume, s.an, f.nume as facultate FROM Student s, Facultate f WHERE s.fid=f.fid AND an<3;
+SELECT s.sid, s.nume, s.an, f.nume as facultate FROM Student s, Facultate f WHERE s.fid=f.fid AND an<3;
 
 --L4.Ex1.
---SELECT p.nume, f.fid, f.nume, f.adr, f.tel FROM Profesor p, Facultate f WHERE p.fid=f.fid;
+SELECT p.nume, f.fid, f.nume, f.adr, f.tel FROM Profesor p, Facultate f WHERE p.fid=f.fid;
 
 --L4.Ex2.
---SELECT k.titlu, s.nrlocuri FROM Curs k, Sala s WHERE k.sala=s.cods AND k.ora > 12;
+SELECT k.titlu, s.nrlocuri FROM Curs k, Sala s WHERE k.sala=s.cods AND k.ora > 12;
 
 --L4.Ex3.
---SELECT * FROM Curs JOIN Sala ON Curs.sala=Sala.cods AND Sala.etaj = 1;
+SELECT * FROM Curs JOIN Sala ON Curs.sala=Sala.cods AND Sala.etaj = 1;
 
 --L4.Ex4.
---SELECT k.titlu, p.nume, to_char(SYSDATE, 'Day', 'NLS_DATE_LANGUAGE = Romanian') as zi_curenta FROM Curs k, Profesor p
--- WHERE k.pid=p.pid 
--- AND trim(k.zi) = trim(to_char(SYSDATE, 'Day', 'NLS_DATE_LANGUAGE = Romanian'));
+ELECT k.titlu, p.nume, to_char(SYSDATE, 'Day', 'NLS_DATE_LANGUAGE = Romanian') as zi_curenta FROM Curs k, Profesor p
+WHERE k.pid=p.pid 
+AND trim(k.zi) = trim(to_char(SYSDATE, 'Day', 'NLS_DATE_LANGUAGE = Romanian'));
 
 --L4.Ex5.
+SELECT Student.*, Curs.titlu, Curs.sala, Contract.nota
+FROM Student JOIN Contract ON Student.sid=Contract.sid JOIN Curs ON Curs.cid=Contract.cid
+WHERE Contract.nota >= 8;
 
 --L4.Ex6.
+SELECT Student.*, Contract.*
+FROM Student FULL OUTER JOIN Contract ON Student.sid = Contract.sid
+WHERE Contract.nrc IS NULL
+ORDER BY Student.nume, Student.an;
 
 --L4.Ex7.
+SELECT Student.*, Contract.*
+FROM Student FULL OUTER JOIN Contract ON Student.sid = Contract.sid
+WHERE Contract.nrc IS not NULL
+ORDER BY substr(Student.nume, 1, instr(Student.nume, ' ') - 1);
 
 --L4.Ex8.
+SELECT Student.*, Curs.zi
+FROM Student JOIN Contract ON Student.sid = Contract.sid JOIN Curs ON Contract.cid = Curs.cid
+WHERE Curs.zi = 'Luni';
 
 --L4.Ex9.
-
+SELECT Student.nume, Student.datan, Curs.titlu, Curs.sala, Sala.nrlocuri
+FROM Student JOIN Contract ON Student.sid = Contract.sid
+JOIN Curs ON Curs.cid = Contract.cid
+JOIN Sala ON Sala.cods = Curs.sala
+WHERE Sala.nrlocuri < 200
+ORDER BY Student.datan, Student.nume;
