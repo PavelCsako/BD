@@ -1,0 +1,77 @@
+# test 1 - s4
+
+--IMG-20250302-WA0002.jpg
+
+SELECT * FROM Student WHERE trim(bursa) = '-' OR trim(bursa) = '0' OR bursa is NULL;
+
+--IMG-20250302-WA0003.jpg
+
+SELECT cid, titlu FROM Curs WHERE titlu LIKE '%e';
+
+--IMG-20250302-WA0038.jpg
+
+SELECT sid, nume FROM Student WHERE an = 2;
+
+--IMG-20250302-WA0042.jpg
+
+SELECT * FROM Student WHERE extract(year FROM datan) LIKE '2002';
+
+
+
+
+# test 2 - s5
+
+--IMG-20250302-WA0001.jpg
+
+SELECT Profesor.nume, Curs.titlu 
+FROM Profesor 
+JOIN Curs ON Profesor.pid = Curs.pid 
+JOIN Sala ON Curs.sala = Sala.cods 
+WHERE nrlocuri >= 50 AND nrlocuri <= 250; 
+
+--IMG-20250302-WA0025.jpg
+
+SELECT  Student.sid, Curs.titlu
+FROM Student 
+JOIN Contract ON Student.sid = Contract.sid
+JOIN Curs ON Contract.cid = Curs.cid
+JOIN Sala ON Curs.sala = Sala.cods
+WHERE Sala.etaj = 2 OR Sala.etaj = 3
+ORDER BY Student.sid;
+
+--IMG-20250302-WA0028.jpg
+
+SELECT Profesor.nume, Profesor.pid, Facultate.tel
+FROM Profesor
+JOIN Facultate ON Facultate.fid = Profesor.fid 
+WHERE Profesor.nume NOT LIKE 'C%';
+
+--IMG-20250302-WA0029.jpg
+
+SELECT Student.sid, Student.nume
+FROM Student
+JOIN Facultate ON Facultate.fid = Student.fid
+JOIN Profesor ON Profesor.fid = Facultate.fid
+WHERE Profesor.pid = 'PAC001';
+
+--IMG-20250302-WA0030.jpg
+
+SELECT Student.sid, Curs.titlu
+FROM Student
+JOIN Contract ON Contract.sid = Student.sid
+JOIN Curs ON Curs.cid = Contract.cid
+WHERE Curs.zi != 'Luni' AND Curs.zi != 'Vineri';
+
+--IMG-20250302-WA0032.jpg
+
+SELECT Student.nume, Facultate.nume
+FROM Student
+JOIN Facultate ON Student.fid = Facultate.fid
+WHERE Student.bursa > 500;
+
+--IMG-20250302-WA0040.jpg
+
+SELECT Facultate.fid, Facultate.nume
+FROM Facultate
+JOIN Student ON Student.fid = Facultate.fid
+WHERE EXTRACT(year FROM SYSDATE) - EXTRACT(year FROM Student.datan) < 21;
