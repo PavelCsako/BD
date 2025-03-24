@@ -1,0 +1,43 @@
+SELECT s.sid, s.nume, s.an, s.bursa FROM Student s WHERE s.bursa > (SELECT bursa FROM Student WHERE sid = 'SET001')
+
+SELECT s.sid, s.nume, s.an, s.bursa FROM Student s WHERE s.bursa >= ALL(SELECT bursa FROM Student WHERE bursa IS NOT NULL)
+
+SELECT titlu, an, sala FROM Curs WHERE sala NOT IN (SELECT cods FROM Sala WHERE etaj = 1)
+
+-- ex 1
+
+SELECT s.nume, s.media 
+FROM Student s 
+WHERE s.fid = 'AC' 
+AND s.media < (SELECT media FROM Student WHERE cnp = '1020608359554')
+
+-- ex 2
+
+SELECT DISTINCT s.bursa 
+FROM Student s 
+WHERE s.fid = 'AC' AND s.bursa > 0
+AND s.bursa <= ALL(SELECT bursa FROM Student WHERE fid = 'AC' AND bursa > 0 AND bursa IS NOT NULL)
+
+-- ex 3
+
+SELECT Curs.titlu 
+FROM Curs, Sala
+WHERE Curs.sala = Sala.cods AND nrlocuri > 100;
+
+-- ex 4
+
+SELECT s.cods, s.nrlocuri 
+FROM Sala s
+WHERE s.cods IN (SELECT sala FROM Curs WHERE fid='AC' OR fid='MEC')
+
+-- ex 5
+
+SELECT s.nume, s.bursa, s.media
+FROM Student s
+WHERE EXISTS (Select bursa, media FROM Student WHERE s.media = media AND s.bursa = bursa AND s.sid <> sid)
+
+-- ex 6
+
+SELECT f.fid, f.nume
+FROM Facultate f
+WHERE EXISTS (Select s.bursa FROM Student s WHERE s.bursa >= ALL (SELECT bursa FROM Student WHERE bursa IS NOT NULL))
