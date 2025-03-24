@@ -10,7 +10,7 @@ SELECT k.titlu, s.nrlocuri FROM Curs k, Sala s WHERE k.sala=s.cods AND k.ora > 1
 SELECT * FROM Curs JOIN Sala ON Curs.sala=Sala.cods AND Sala.etaj = 1;
 
 --L4.Ex4.
-ELECT k.titlu, p.nume, to_char(SYSDATE, 'Day', 'NLS_DATE_LANGUAGE = Romanian') as zi_curenta FROM Curs k, Profesor p
+SELECT k.titlu, p.nume, to_char(SYSDATE, 'Day', 'NLS_DATE_LANGUAGE = Romanian') as zi_curenta FROM Curs k, Profesor p
 WHERE k.pid=p.pid 
 AND trim(k.zi) = trim(to_char(SYSDATE, 'Day', 'NLS_DATE_LANGUAGE = Romanian'));
 
