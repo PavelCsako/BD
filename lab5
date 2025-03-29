@@ -6,10 +6,18 @@ SELECT titlu, an, sala FROM Curs WHERE sala NOT IN (SELECT cods FROM Sala WHERE 
 
 -- ex 1
 
+var I
+
 SELECT s.nume, s.media 
 FROM Student s 
 WHERE s.fid = 'AC' 
 AND s.media < (SELECT media FROM Student WHERE cnp = '1020608359554')
+
+var II
+
+SELECT * FROM Student 
+WHERE fid = 'AC' 
+AND media < (SELECT s.media FROM Student s WHERE cnp = '1021205355288')
 
 -- ex 2
 
@@ -19,6 +27,13 @@ WHERE s.fid = 'AC' AND s.bursa > 0
 AND s.bursa <= ALL(SELECT bursa FROM Student WHERE fid = 'AC' AND bursa > 0 AND bursa IS NOT NULL)
 
 -- ex 3
+
+# varianta corecta
+
+SELECT titlu FROM Curs
+WHERE sala IN (SELECT cods FROM Sala WHERE nrlocuri > 100)
+
+# cu OUTER JOIN 
 
 SELECT Curs.titlu 
 FROM Curs, Sala
