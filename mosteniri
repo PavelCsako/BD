@@ -1,4 +1,4 @@
-# test 1 - s4
+### test 1 - s4 ###
 
 --IMG-20250302-WA0002.jpg
 
@@ -17,9 +17,7 @@ SELECT sid, nume FROM Student WHERE an = 2;
 SELECT * FROM Student WHERE extract(year FROM datan) LIKE '2002';
 
 
-
-
-# test 2 - s5
+### test 2 - s5 ###
 
 --IMG-20250302-WA0001.jpg
 
@@ -75,3 +73,47 @@ SELECT Facultate.fid, Facultate.nume
 FROM Facultate
 JOIN Student ON Student.fid = Facultate.fid
 WHERE EXTRACT(year FROM SYSDATE) - EXTRACT(year FROM Student.datan) < 21;
+
+
+### test 3 - s6 ###
+
+--IMG-20250302-WA0006.jpg
+
+--var I
+SELECT c.titlu, c.cid FROM Curs c
+WHERE c.fid IN ('AC', 'ET')
+AND c.zi = ALL(SELECT zi FROM Curs WHERE titlu = 'Fizica')
+
+--var II (Alexia Cutaru)
+SELECT c.titlu, c.cid, c.zi
+FROM Curs c
+WHERE c.fid IN ('AC', 'ET') AND c.zi IN (SELECT zi FROM Curs WHERE titlu LIKE 'Fizica');
+
+--IMG-20250302-WA0018.jpg
+
+SELECT p.nume, p.datan FROM Profesor p
+WHERE (p.fid = 'MEC' OR p.fid = 'AC')
+AND p.datan < (SELECT datan FROM Profesor WHERE nume LIKE 'Raul Brad')
+
+--IMG-20250302-WA0019.jpg
+
+SELECT s.nume, s.sid FROM Student s
+WHERE s.an LIKE 1
+AND s.fid NOT IN (SELECT fid FROM Curs WHERE titlu LIKE 'Limbaje de programare')
+
+--IMG-20250302-WA0020.jpg
+
+SELECT s.nume, s.sid FROM Student s
+WHERE s.fid = 'MEC'
+AND EXISTS (SELECT nrc FROM Contract WHERE sid = s.sid)
+
+--IMG-20250302-WA0022.jpg
+
+SELECT s.sid, s.nume, s.media, s.fid FROM Student s
+WHERE s.fid = 'AC'
+AND s.media > (SELECT media FROM Student WHERE nume LIKE 'Emanuel Petrescu')
+
+--IMG-20250302-WA0060.jpg
+
+SELECT f.nume, f.fid FROM Facultate f
+WHERE NOT EXISTS (Select 1 FROM Student s WHERE s.fid =  f.fid AND s.media < 5.5)
