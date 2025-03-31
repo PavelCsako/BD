@@ -4,3 +4,7 @@ UNION
 SELECT s2.sid, s2.nume, s2.an, s2.bursa FROM Student s2
 WHERE s2.bursa>900
 
+--Facultățile care au cursuri și luni și miercuri
+SELECT c1.fid FROM Curs c1 WHERE c1.zi = 'Luni'
+INTERSECT
+SELECT c2.fid FROM Curs c2 WHERE c2.zi = 'Miercuri'
