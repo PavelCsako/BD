@@ -1,0 +1,6 @@
+SELECT s1.sid, s1.nume, s1.an, s1.bursa FROM Student s1
+WHERE s1.bursa < 750
+UNION
+SELECT s2.sid, s2.nume, s2.an, s2.bursa FROM Student s2
+WHERE s2.bursa>900
+
