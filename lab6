@@ -2,9 +2,61 @@ SELECT s1.sid, s1.nume, s1.an, s1.bursa FROM Student s1
 WHERE s1.bursa < 750
 UNION
 SELECT s2.sid, s2.nume, s2.an, s2.bursa FROM Student s2
-WHERE s2.bursa>900
+WHERE s2.bursa > 900
 
 --Facultățile care au cursuri și luni și miercuri
 SELECT c1.fid FROM Curs c1 WHERE c1.zi = 'Luni'
 INTERSECT
 SELECT c2.fid FROM Curs c2 WHERE c2.zi = 'Miercuri'
+
+-- ex 1
+
+SELECT s1.sid, s1.nume, s1.an, s1.bursa FROM Student s1
+WHERE s1.bursa < 750 AND s1.bursa IS NOT NULL AND s1.bursa != '0'
+UNION
+SELECT s2.sid, s2.nume, s2.an, s2.bursa FROM Student s2
+WHERE s2.bursa > 900 AND s2.bursa IS NOT NULL AND s2.bursa != '0'
+
+-- ex 2
+
+SELECT DISTINCT s1.sid, s1.nume, s1.an, s1.bursa FROM Student s1
+WHERE (s1.bursa < 750 OR s1.bursa > 900) AND s1.bursa IS NOT NULL AND s1.bursa != '0'
+
+-- ex 3
+
+SELECT s1.sid, s1.nume, s1.an, s1.bursa FROM Student s1
+WHERE s1.bursa >= ALL(SELECT bursa FROM Student WHERE bursa > 0)
+UNION
+SELECT s2.sid, s2.nume, s2.an, s2.bursa FROM Student s2
+WHERE s2.bursa <= ALL(SELECT bursa FROM Student WHERE bursa IS NOT NULL AND bursa <> 0) 
+AND s2.bursa IS NOT NULL AND bursa <> 0
+
+-- ex 4
+
+SELECT f1.fid, f1.nume, f1.adr FROM Facultate f1, Curs c1, Sala s1
+WHERE f1.fid = c1.fid AND c1.sala = s1.cods AND s1.etaj = '1'
+INTERSECT
+SELECT f2.fid, f2.nume, f2.adr FROM Facultate f2, Curs c2, Sala s2
+WHERE f2.fid = c2.fid AND c2.sala = s2.cods AND s2.etaj = '2'
+
+-- ex 5
+
+# FARA OP PE MULTIMI 
+SELECT s1.sid, s1.nume, s1.an, s1.bursa FROM Student s1, Contract co1, Curs c1
+WHERE s1.sid = co1.sid AND co1.cid = c1.cid AND (s1.bursa IS NULL OR s1.bursa = 0) AND c1.sala = 'A101'
+
+#CU INTERSECT 
+SELECT s1.sid, s1.nume, s1.an, s1.bursa FROM Student s1, Contract co1, Curs c1
+WHERE s1.sid = co1.sid AND co1.cid = c1.cid AND (s1.bursa IS NULL OR s1.bursa = 0) AND c1.sala = 'A101'
+INTERSECT
+SELECT s2.sid, s2.nume, s2.an, s2.bursa FROM Student s2, Contract co2, Curs c2
+WHERE s2.sid = co2.sid AND co2.cid = c2.cid AND (s2.bursa IS NULL OR s2.bursa = 0) AND c2.sala = 'A101'
+
+-- ex 6
+
+SELECT s1.sid, s1.nume, s1.an, s1.bursa FROM Student s1, Facultate f1
+WHERE s1.fid = f1.fid AND f1.tel = '0256-403211'
+MINUS
+SELECT s2.sid, s2.nume, s2.an, s2.bursa FROM Student s2, Contract co2, Curs c2, Profesor p2
+WHERE s2.sid = co2.sid AND co2.cid = c2.cid AND c2.pid = p2.pid 
+AND c2.pid NOT IN (SELECT pid FROM Profesor WHERE nume <> 'Ciprian Porumbescu')
