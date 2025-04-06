@@ -117,3 +117,104 @@ AND s.media > (SELECT media FROM Student WHERE nume LIKE 'Emanuel Petrescu')
 
 SELECT f.nume, f.fid FROM Facultate f
 WHERE NOT EXISTS (Select 1 FROM Student s WHERE s.fid =  f.fid AND s.media < 5.5)
+
+
+### test 4 - s7 ###
+
+SELECT f1.fid, f1.nume FROM Facultate f1, Student s1
+WHERE s1.fid = f1.fid AND substr(s1.adr, instr(s1.adr, ',') + 1) LIKE 'H%'
+UNION
+SELECT f2.fid, f2.nume FROM Facultate f2, Profesor p2
+WHERE f2.fid = p2.fid AND p2.grad = 'prof'
+
+SELECT c1.cid, c1.titlu FROM Curs c1, Profesor p1
+WHERE c1.pid = p1.pid AND substr(p1.nume, instr(p1.nume, ' ') + 1) LIKE 'P%'
+INTERSECT
+SELECT c2.cid, c2.titlu FROM Curs c2
+WHERE c2.fid IN (SELECT s.fid FROM Student s WHERE s.media >=9)
+
+--var 1
+SELECT c1.cid, c1.an FROM Curs c1
+JOIN Profesor p1 ON c1.pid = p1.pid 
+WHERE p1.grad LIKE 'prof'
+MINUS
+SELECT c2.cid, c2.an FROM Curs c2
+WHERE c2.fid IN (SELECT fid FROM Facultate WHERE fid LIKE 'AC')
+
+--var 2
+SELECT c.cid, c.an FROM Curs c
+JOIN Profesor p ON p.pid=c.pid
+WHERE p.grad='prof'
+MINUS
+SELECT c.cid, c.an FROM Curs c
+WHERE c.fid='AC'
+
+--var 1
+SELECT p1.pid, p1.fid FROM Profesor p1
+WHERE p1.datan < '01/01/1980'
+MINUS
+SELECT p2.pid, p2.fid FROM Profesor p2
+WHERE p2.grad LIKE 'conf'
+
+--var 2
+SELECT p1.pid, p1.fid FROM Profesor p1
+WHERE p1.datan < '01/01/1980'
+INTERSECT
+SELECT p2.pid, p2.fid FROM Profesor p2
+WHERE p2.grad NOT LIKE 'conf'
+
+--var 3 -- varianta optima
+SELECT p.pid, p.fid FROM Profesor p
+WHERE p.datan < TO_DATE('1980-01-01', 'YYYY-MM-DD')
+INTERSECT
+SELECT p.pid, p.fid FROM Profesor p
+WHERE p.grad != 'conf'
+
+--var 1
+SELECT c1.cid, c1.an FROM Curs c1
+WHERE c1.fid = 'AC'
+MINUS
+SELECT c2.cid, c2.an FROM Curs c2
+JOIN Profesor p2 ON c2.pid = p2.pid
+WHERE p2.grad = 'conf'
+
+--var 2
+SELECT c1.cid, c1.an FROM Curs c1
+WHERE c1.fid = 'AC'
+INTERSECT
+SELECT c2.cid, c2.an FROM Curs c2
+JOIN Profesor p2 ON c2.pid = p2.pid
+WHERE p2.grad != 'conf'
+
+--var 1
+SELECT c1.cid, c1.titlu FROM Curs c1
+WHERE c1.fid = 'AC'
+INTERSECT
+SELECT c2.cid, c2.titlu FROM Curs c2
+WHERE c2.zi != 'Luni'
+
+--var 2
+SELECT c1.cid, c1.titlu FROM Curs c1
+WHERE c1.fid = 'AC'
+MINUS
+SELECT c2.cid, c2.titlu FROM Curs c2
+WHERE c2.zi = 'Luni'
+
+SELECT s1.sid, s1.nume FROM Student s1
+WHERE (s1.bursa IS NULL OR s1.bursa = 0)
+UNION
+SELECT s2.sid, s2.nume FROM Student s2
+WHERE s2.media < 6.5
+
+SELECT s.sid, s.nume FROM Student s
+WHERE s.bursa NOT BETWEEN 6 AND 7.8
+UNION
+SELECT s.sid, s.nume FROM Student s
+JOIN CONTRACT co ON s.sid = co.sid
+WHERE co.an LIKE 2021 
+
+SELECT c.nrc, c.semestru FROM Contract c
+WHERE c.nota >= 8
+UNION
+SELECT c.nrc, c.semestru FROM Contract c
+WHERE c.semestru = 2
