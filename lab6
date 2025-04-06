@@ -77,4 +77,4 @@ WHERE s1.fid = f1.fid AND f1.tel = '0256-403211'
 MINUS
 SELECT s2.sid, s2.nume, s2.an, s2.bursa FROM Student s2, Contract co2, Curs c2, Profesor p2
 WHERE s2.sid = co2.sid AND co2.cid = c2.cid AND c2.pid = p2.pid 
-AND c2.pid NOT IN (SELECT pid FROM Profesor WHERE nume <> 'Ciprian Porumbescu')
+AND c2.pid IN (SELECT pid FROM Profesor WHERE nume <> 'Ciprian Porumbescu')
