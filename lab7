@@ -16,29 +16,38 @@ GROUP BY an
 HAVING COUNT(*) > 3;
 
 --ex 1
-SELECT COUNT(bursa) AS nrBurse
+SELECT COUNT(*) as nrStudentiFaraBursa
 FROM Student
-WHERE media > 7.50;
---31
+WHERE (bursa IS NULL OR bursa = 0)
+AND media > 7.5;
+--6
 
 --ex 2
-SELECT COUNT(*) AS nrStudCareAuOreCuProfesorulLucaCaragiale
+SELECT COUNT(DISTINCT s.sid) AS nrStudCareAuOreCuProfesorulLucaCaragiale
 FROM Student s, Facultate f, Profesor p
 WHERE s.fid = f.fid AND p.fid = f.fid
 AND p.nume = 'Luca Caragiale';
 --15
 
+SELECT COUNT(DISTINCT s.sid) AS nrStudenti
+FROM Student s
+JOIN Contract co ON s.sid = co.sid
+JOIN Curs c ON co.cid = c.cid
+JOIN Profesor p ON c.pid = p.pid
+WHERE p.nume = 'Luca Caragiale';
+--8
+
 --ex 3
-SELECT COUNT(*) AS nrStudCareAuOreLaEtajul1
+SELECT COUNT(DISTINCT *) AS nrStudCareAuOreLaEtajul1
 FROM Student s, Contract co, Curs cu, Sala sa
 WHERE s.sid = co.sid AND co.cid = cu.cid AND cu.sala = sa.cods
 AND sa.etaj = 1;
---100
+--42
 
 --ex 4
-SELECT MIN(datan) AS celMaiTanar, MAX(datan) AS celMaiBatran FROM Student WHERE an = 2
+SELECT MIN(datan) AS celMaiBatran, MAX(datan) AS celMaiTanar FROM Student WHERE an = 2;
 /*
-CELMAITANAR	CELMAIBATRAN
+CELMAIBATRAN	CELMAITANAR
 11/18/2000	2/29/2008
 */
 
@@ -50,22 +59,39 @@ WHERE s.fid = f.fid GROUP BY f.nume, s.an
 SELECT MIN(bursa) AS bursaMin, AVG(bursa) AS medieBurse, MAX(bursa) AS bursaMax FROM Student s, Contract co, Curs cu
 WHERE s.sid = co.sid AND co.cid = cu.cid
 AND cu.zi = 'Luni' AND s.bursa > 0
+
+--mai elegant
+SELECT 
+MIN(s.bursa) AS bursa_minima,
+AVG(s.bursa) AS bursa_medie,
+MAX(s.bursa) AS bursa_maxima
+FROM Student s
+JOIN Contract co ON s.sid = co.sid
+JOIN Curs cu ON co.cid = cu.cid
+WHERE cu.zi = 'Luni' AND s.bursa > 0;
+
 /*
 BURSAMIN	MEDIEBURSE	BURSAMAX
 400	666.666666666666666666666666666666666667	1000
 */
 
 --ex 7
+--var 1
 SELECT * FROM Student WHERE bursa > ALL(SELECT AVG(bursa) FROM Student WHERE bursa > 0)
 
+--var 2
+SELECT * FROM Student s WHERE s.bursa > (SELECT AVG(bursa) FROM Student);
+
 --ex 8
-SELECT f.nume, AVG(media) AS media, STDDEV(media) AS deviatia, 
-AVG(media) - STDDEV(media) AS prag_jos,
-AVG(media) + STDDEV(media) AS prag_sus
-FROM Student s, Facultate f WHERE s.fid = f.fid
-GROUP BY f.nume 
+SELECT
+f.nume,
+trunc(avg(s.media), 2) - trunc(stddev(s.media), 2) AS prag_jos,
+trunc(avg(s.media), 2) + trunc(stddev(s.media), 2) AS prag_sus
+FROM Student s, Facultate f
+WHERE s.fid = f.fid
+GROUP BY f.nume;
 
 --ex 9
 SELECT * FROM Student 
-WHERE media > (SELECT avg(media) - stddev(media) FROM Student)
-OR media < (SELECT avg(media) + stddev(media) FROM Student)
+WHERE media > (SELECT avg(media) + stddev(media) FROM Student)
+OR media < (SELECT avg(media) - stddev(media) FROM Student)
