@@ -218,3 +218,41 @@ WHERE c.nota >= 8
 UNION
 SELECT c.nrc, c.semestru FROM Contract c
 WHERE c.semestru = 2
+
+
+### test 5 - s8 ###
+
+--ex 1
+SELECT an, TRUNC(AVG(nota), 2) AS medieSem2 FROM Contract 
+WHERE semestru = 2 
+GROUP BY an
+
+--ex 2
+SELECT an, TRUNC(variance(nota), 2) AS medieSem2 FROM Contract 
+WHERE semestru = 1 
+GROUP BY an
+
+--ex 3
+SELECT etaj, SUM(nrlocuri) AS nrLocuri FROM Sala
+GROUP BY etaj;
+
+--ex 4
+--var 1
+SELECT COUNT(*) FROM Student
+WHERE media BETWEEN 7 AND 9
+
+--var 2
+SELECT COUNT(*) AS nr_studenti
+FROM Student
+WHERE media >= 7 AND media <= 9;
+
+--ex 5
+SELECT grad, COUNT(pid) FROM Profesor
+GROUP BY grad
+HAVING COUNT(grad) > 5;
+
+--ex 6
+SELECT MIN(datan) FROM Student
+
+--ex 7
+SELECT COUNT(cid) FROM Curs WHERE semestru = 1; 
